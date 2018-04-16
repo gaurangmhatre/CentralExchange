@@ -1,0 +1,88 @@
+var express = require('express');
+var mq_client = require('../rpc/client');
+
+exports.getItemBasedRecommendations = function(req,res){
+
+    console.log("userId: "+req.query.userId);
+    console.log("numberOfRecommendation: "+req.query.numberOfRecommendation);
+
+    var userid = req.query.userId;
+    var numberOfRecommendation = req.query.numberOfRecommendation;
+
+    var msg_payload = {"userId":userid , "numberOfRecommendation":numberOfRecommendation};
+
+    if(userid != undefined ) {
+        mq_client.make_request('getItemBasedRecommendations_queue',msg_payload, function(err,results){
+
+            console.log(results.data.toString());
+            if(err){
+                throw err;
+            }
+            else {
+                res.send(results.data.toString());
+            }
+        });
+    }
+    else {
+        res.send({"statusCode": 401});
+    }
+
+};
+
+exports.getUserBasedRecommendations = function(req,res){
+
+    console.log("userId: "+req.query.userId);
+    console.log("numberOfRecommendation: "+req.query.numberOfRecommendation);
+
+    var userid = req.query.userId;
+    var numberOfRecommendation = req.query.numberOfRecommendation;
+
+    var msg_payload = {"userId":userid , "numberOfRecommendation":numberOfRecommendation};
+
+    if(userid != undefined ) {
+        mq_client.make_request('getUserBasedRecommendations_queue',msg_payload, function(err,results){
+
+            console.log(results.data.toString());
+            if(err){
+                throw err;
+            }
+            else {
+                res.send(results.data.toString());
+            }
+        });
+    }
+    else {
+        res.send({"statusCode": 401});
+    }
+
+};
+
+exports.postUserData = function(req,res){
+
+    console.log("userId: "+req.query.userId);
+    console.log("itemId: "+req.query.itemId);
+    console.log("ratings: "+req.query.ratings);
+
+    var userid = req.query.userId;
+    var itemId = req.query.itemId;
+    var ratings = req.query.ratings;
+
+    var msg_payload = {"userId":userid , "itemId":itemId, "ratings": ratings};
+
+    if(userid != undefined ) {
+        mq_client.make_request('setUserData_queue',msg_payload, function(err,results){
+
+            console.log(results.data.toString());
+            if(err){
+                throw err;
+            }
+            else {
+                res.send(results.data.toString());
+            }
+        });
+    }
+    else {
+        res.send({"statusCode": 401});
+    }
+
+};
